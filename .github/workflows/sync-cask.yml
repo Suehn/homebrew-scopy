@@ -1,0 +1,40 @@
+name: Sync Cask from Scopy
+
+on:
+  # 每天检查一次
+  schedule:
+    - cron: '0 0 * * *'
+  # 手动触发
+  workflow_dispatch:
+  # 监听 Scopy 仓库的 release
+  repository_dispatch:
+    types: [scopy-release]
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout homebrew-scopy
+        uses: actions/checkout@v4
+
+      - name: Fetch latest Cask from Scopy
+        run: |
+          curl -sSL https://raw.githubusercontent.com/Suehn/Scopy/main/Casks/scopy.rb -o Casks/scopy.rb
+
+      - name: Check for changes
+        id: changes
+        run: |
+          if git diff --quiet Casks/scopy.rb; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add Casks/scopy.rb
+          git commit -m "chore: sync Cask from Scopy repo"
+          git push
