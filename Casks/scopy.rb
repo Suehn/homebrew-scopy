@@ -1,6 +1,6 @@
 cask "scopy" do
-  version "0.50.fix2"
-  sha256 "00ff87e3698a3e1c4e077b2c1fa9d4afe7a52753072e56ad29d6dc0d196a86ee"
+  version "0.50.fix12"
+  sha256 "2fe2eaf788f0bdda1056ab578d0418d68e2f584c5aa69b4ace488f2ed2fab37c"
 
   url "https://github.com/Suehn/Scopy/releases/download/v#{version}/Scopy-#{version}.dmg"
   name "Scopy"
